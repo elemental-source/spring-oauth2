@@ -36,6 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
             	.loginProcessingUrl("/login")
                 .loginPage("/login.jsp")
+				.passwordParameter("password")
+				.usernameParameter("username")
                 .failureUrl("/login.jsp?authentication_error=true")
                 .permitAll();
     	// @formatter:on

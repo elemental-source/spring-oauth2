@@ -1,22 +1,20 @@
 package org.springframework.security.oauth.examples.tonr.impl;
 
+import org.springframework.security.oauth.examples.tonr.SparklrException;
+import org.springframework.security.oauth.examples.tonr.SparklrService;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.springframework.security.oauth.examples.tonr.SparklrException;
-import org.springframework.security.oauth.examples.tonr.SparklrService;
-import org.springframework.web.client.RestOperations;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Ryan Heaton
@@ -26,12 +24,11 @@ public class SparklrServiceImpl implements SparklrService {
 	private String sparklrPhotoListURL;
 	private String sparklrTrustedMessageURL;
 	private String sparklrPhotoURLPattern;
-	private RestOperations sparklrRestTemplate;
-	private RestOperations trustedClientRestTemplate;
+	private RestTemplateFactory restTemplateFactory;
 
 	public List<String> getSparklrPhotoIds() throws SparklrException {
 		try {
-			InputStream photosXML = new ByteArrayInputStream(sparklrRestTemplate.getForObject(
+			InputStream photosXML = new ByteArrayInputStream(restTemplateFactory.create().getForObject(
 					URI.create(sparklrPhotoListURL), byte[].class));
 
 			final List<String> photoIds = new ArrayList<String>();
@@ -60,13 +57,15 @@ public class SparklrServiceImpl implements SparklrService {
 	}
 
 	public InputStream loadSparklrPhoto(String id) throws SparklrException {
-		return new ByteArrayInputStream(sparklrRestTemplate.getForObject(
+		return new ByteArrayInputStream(restTemplateFactory.create().getForObject(
 				URI.create(String.format(sparklrPhotoURLPattern, id)), byte[].class));
 	}
 
+	@Override
 	public String getTrustedMessage() {
-		return this.trustedClientRestTemplate.getForObject(URI.create(sparklrTrustedMessageURL), String.class);
+		return null;
 	}
+
 
 	public void setSparklrPhotoURLPattern(String sparklrPhotoURLPattern) {
 		this.sparklrPhotoURLPattern = sparklrPhotoURLPattern;
@@ -80,12 +79,16 @@ public class SparklrServiceImpl implements SparklrService {
 		this.sparklrTrustedMessageURL = sparklrTrustedMessageURL;
 	}
 
-	public void setSparklrRestTemplate(RestOperations sparklrRestTemplate) {
-		this.sparklrRestTemplate = sparklrRestTemplate;
+	public void setRestTemplateFactory(RestTemplateFactory restTemplateFactory) {
+		this.restTemplateFactory = restTemplateFactory;
 	}
 
-	public void setTrustedClientRestTemplate(RestOperations trustedClientRestTemplate) {
-		this.trustedClientRestTemplate = trustedClientRestTemplate;
-	}
+//	public void setSparklrRestTemplate(RestOperations sparklrRestTemplate) {
+//		this.sparklrRestTemplate = sparklrRestTemplate;
+//	}
+//
+//	public void setTrustedClientRestTemplate(RestOperations trustedClientRestTemplate) {
+//		this.trustedClientRestTemplate = trustedClientRestTemplate;
+//	}
 
 }
