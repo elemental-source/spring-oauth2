@@ -2,6 +2,7 @@ package org.springframework.security.oauth.examples.tonr.impl;
 
 import org.springframework.security.oauth.examples.tonr.SparklrException;
 import org.springframework.security.oauth.examples.tonr.SparklrService;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -20,6 +21,8 @@ import java.util.List;
  * @author Ryan Heaton
  */
 public class SparklrServiceImpl implements SparklrService {
+
+	OAuth2ClientContext oAuth2ClientContext;
 
 	private String sparklrPhotoListURL;
 	private String sparklrTrustedMessageURL;

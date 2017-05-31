@@ -4,25 +4,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth.examples.config.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import java.util.Arrays;
 
 public class RestTemplateFactory {
 
-    @Value("${accessTokenUri}")
-    private String accessTokenUri;
-
     private OAuth2ClientContext oAuth2ClientContext;
 
     public OAuth2RestOperations create() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = ((User) authentication.getPrincipal()).getUsername();
-        String password = (String) authentication.getCredentials();
-        return new OAuth2RestTemplate(createResourceDetails(username, password), oAuth2ClientContext);
+        OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        OAuth2AccessToken oAuth2AccessToken = authentication.getOAuth2AccessToken();
+        return new OAuth2RestTemplate()
     }
 
     private ResourceOwnerPasswordResourceDetails createResourceDetails(String username, String password) {

@@ -223,6 +223,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.racquettrack/spring-security-oauth2-client -->
+        <dependency>
+            <groupId>com.racquettrack</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>
